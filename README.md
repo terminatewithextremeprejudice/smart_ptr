@@ -13,7 +13,7 @@ Usage example
 ```
 int *shared_int = shared_ptr(int, 1);
 smart int *reference = smart_ptr_ref(shared_int); // smart attribute free's the reference from stack when the variable out of scope of the function 
-smart_ptr_meta_shared* m = smart_ptr_get_meta(shared_int); // referencing to meta object increases reference count too 
+smart_ptr_meta_shared* m = smart_ptr_get_meta(reference); // referencing to meta object increases reference count too 
 assert(m->ref_count == 2);
 return 0; // m->ref_count == 0
 ```
