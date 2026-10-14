@@ -1,9 +1,9 @@
-#ifndef CORE_SMART_PTR_
-#define CORE_SMART_PTR_
+#ifndef SMART_PTR_
+#define SMART_PTR_
 
 /**
  * simple smart_ptr & unique_ptr implementation that uses 
- * GNU C extensions for derefering. 
+ * GNU C extensions for dereferencing. 
  *
  * smart_ptr should be referenced by another another variable by smart_ptr_ref function
  * which increases the internal reference count. wheneber that that variable exits the scope of 
