@@ -37,15 +37,15 @@
 static size_t
 atomic_add(volatile size_t *count, const size_t limit, const size_t val)
 {
-    size_t old_count, new_count;
+	size_t old_count, new_count;
 
-    do {
-      old_count = *count;
-      if (old_count == limit)
-          abort();
-      new_count = old_count + val;
-    } while (!__sync_bool_compare_and_swap(count, old_count, new_count));
-    return new_count;
+    	do {
+      		old_count = *count;
+      		if (old_count == limit)
+          		abort();
+      		new_count = old_count + val;
+    	} while (!__sync_bool_compare_and_swap(count, old_count, new_count));
+    	return new_count;
 }
 
 static void
@@ -53,7 +53,7 @@ atomic__store(size_t* p_ai, size_t val)
 {
 	int ai_was ;
 
-    ai_was = *p_ai ;
+    	ai_was = *p_ai ;
 	ai_was = __sync_val_compare_and_swap (p_ai, ai_was, val);
 }
 
@@ -100,7 +100,7 @@ typedef struct {
 	size_t  size;
 	size_t  nmemb;
 	enum    smart_ptr_kind kind;
-	void (*dtor)(void *, void *);
+	void 	(*dtor)(void *, void *);
 	smart_ptr_malloc_meta meta;
 } smart_ptr_malloc_args;
 
@@ -111,10 +111,10 @@ void  smart_ptr_stack_free(void *ptr);
 void  smart_ptr_free(void *ptr);
 void *smart_ptr_get_meta(void *ptr);
 
-#define smart_ptr_malloc(...) \
+#define _smart_ptr_malloc(...) 						    \
   smart_ptr_malloc(&(smart_ptr_malloc_args) { SENTINEL __VA_ARGS__ })
 
-#define smart_ptr_move(Ptr) \
+#define smart_ptr_move(Ptr) 						    \
   smart_ptr_move_size((Ptr), sizeof (*(Ptr)))
 
 #define ARGS_   args.dtor, { args.meta.data, args.meta.size }
@@ -132,8 +132,8 @@ void *smart_ptr_get_meta(void *ptr);
         };                                                                  \
         const __typeof__(Type[1]) dummy;                                    \
         void *var = sizeof (dummy[0]) == sizeof (dummy)                     \
-            ? smart_ptr_malloc(sizeof (Type), 0, Kind, ARGS_)               \
-            : smart_ptr_malloc(sizeof (dummy[0]),                           \
+            ? _smart_ptr_malloc(sizeof (Type), 0, Kind, ARGS_)               \
+            : _smart_ptr_malloc(sizeof (dummy[0]),                           \
                     sizeof (dummy) / sizeof (dummy[0]), Kind, ARGS_);       \
         if (var != NULL)                                                    \
             memcpy(var, &args.value, sizeof (Type));                        \
@@ -142,8 +142,6 @@ void *smart_ptr_get_meta(void *ptr);
 
 #define shared_ptr(Type, ...) smart_ptr(SHARED, Type, __VA_ARGS__)
 #define unique_ptr(Type, ...) smart_ptr(UNIQUE, Type, __VA_ARGS__)
-
-#undef smart_ptr_malloc
 
 inline size_t
 align(size_t s)
@@ -260,7 +258,7 @@ smart_ptr_get_meta(void* ptr)
   assert(meta->ptr == ptr);
 
   size_t head_size = meta->kind & SHARED ? sizeof(smart_ptr_meta_shared) : sizeof(smart_ptr_meta);
-  size_t* meta_size = (size_t *) ptr - 1;
+  size_t *meta_size = (size_t *) ptr - 1;
   assert(*meta_size == head_size);
   return meta;
 }
@@ -283,9 +281,11 @@ smart_ptr_free(void *ptr)
     return;
   }
 
+
   assert((size_t) ptr == align((size_t)ptr));
   smart_ptr_meta* meta = get_meta(ptr);
   assert(meta->ptr == ptr);
+
 
   // check if meta is used on shared ptr and prevent dealloc if theres still references
   if (meta->kind & SHARED && atomic_dec(&((smart_ptr_meta_shared*) meta)->ref_count)) {
