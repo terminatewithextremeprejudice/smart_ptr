@@ -10,7 +10,7 @@ which decreases refence count. with ref count being 0,
 underlying ptr will be freed.
 
 Usage example
-```
+``` c
 int *shared_int = shared_ptr(int, 1);
 smart int *reference = smart_ptr_ref(shared_int); // smart attribute free's the reference from stack when the variable out of scope of the function 
 smart_ptr_meta_shared* m = smart_ptr_get_meta(reference); // referencing to meta object increases reference count too 
